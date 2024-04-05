@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>결제하기</title>
+</head>
+<body>
+    <h1>결제하기</h1>
+    <p>총 결제 금액: {{ payment_amount }}</p>
+    <form method="post">
+        {% csrf_token %}
+        <label for="payment_method">결제 방법:</label>
+        <input type="hidden" name="payment_amount" value="{{ payment_amount }}">
+        <select name="payment_method" id="payment_method">
+            {% for method in payment_method %}
+            <option value="{{ method.id }}">{{ method.method }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">결제</button>
+    </form>
+</body>
+</html>

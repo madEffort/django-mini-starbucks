@@ -7,18 +7,18 @@ class ProductAdmin(admin.ModelAdmin):
     pass
 
 
+@admin.register(ProductSize)
+class ProductSizeAdmin(admin.ModelAdmin):
+    pass
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(Size)
-class ProductSizeAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(ProductSize)
-class ProductSizeAdmin(admin.ModelAdmin):
+@admin.register(Price)
+class PriceAdmin(admin.ModelAdmin):
     pass
 
 
