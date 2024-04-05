@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<body class="bg-green-700">
+<div class="container mx-auto px-12 p-4">
+    <ul class="flex list-none p-0 m-0 gap-4 mb-8">
+        <li class="bg-yellow-200 brightness-90 hover:bg-yellow-200 hover:brightness-100 text-blue-900 font-semibold py-2 px-4 rounded-full">
+            <a href="{% url 'order:product_list' %}" class="no-underline text-blue-900 hover:text-blue-900">카테고리(전체)</a>
+        </li>
+        {% for c in category %}
+        <li class="bg-yellow-200 brightness-90 hover:bg-yellow-200 hover:brightness-100 text-blue-900 font-semibold py-2 px-4 rounded-full">
+            <a href="{% url 'order:product_category' c.id %}" class="no-underline text-blue-900 hover:text-blue-900">{{ c.category }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-4">
+
+        {% for product in product_list %}
+        <a href="{% url 'order:product_detail' product.id %}">
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden brightness-90 hover:brightness-100">
+                <img src="{{product.image_url}}" alt="Product Image" class="w-full h-48 object-cover" />
+                <div class="p-4">
+                    <p class="text-lg text-center font-semibold text-orange-800">{{ product.product }}</p>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+        
+    </div>
+
+    {% if is_paginated %}
+    <div class="flex justify-center items-center mt-4">'
+
+        {% if page_obj.has_previous %}
+        <a href="?page=1" class="bg-yellow-200 brightness-90 hover:bg-yellow-200 hover:brightness-100 text-blue-900 font-semibold py-2 px-4 rounded-full mx-1">
+            &lt;&lt;
+        </a>
+        <a href="?page={{ page_obj.previous_page_number }}"
+            class="bg-yellow-200 brightness-90 hover:bg-yellow-200 hover:brightness-100 text-blue-900 font-semibold py-2 px-4 mx-1 rounded-full">
+            &lt;
+        </a>
+        {% endif %}
+
+        <div class="bg-yellow-200 brightness-90 text-blue-900 font-semibold py-2 px-4 mx-1 rounded-full">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </div>
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}"
+            class="bg-yellow-200 brightness-90 hover:bg-yellow-200 hover:brightness-100 text-blue-900 font-semibold py-2 px-4 rounded-full mx-1">
+            &gt;
+        </a>
+        <a href="?page={{ page_obj.paginator.num_pages }}"
+            class="bg-yellow-200 brightness-90 hover:bg-yellow-200 hover:brightness-100 text-blue-900 font-semibold py-2 px-4 rounded-full mx-1">
+            &gt;&gt;
+        </a>
+        {% endif %}
+
+    </div>
+    {% endif %}
+</div>
+</body>
+{% endblock %}

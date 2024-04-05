@@ -9,14 +9,14 @@
     {% for item in order_items %}
         {{ item.product }} - {{ item.price.size }}, {{ item.quantity }}개 | {{ item.price.price }} 원
         <!-- "제거" 버튼 추가 -->
-        <form action="{% url 'kiosk:cart_remove_item' order_id item.id %}" method="post" style="display:inline;">
+        <form action="{% url 'cart:remove_item' order_id item.id %}" method="post" style="display:inline;">
             {% csrf_token %}
             <button type="submit">제거</button>
         </form>
         <br>
     {% endfor %}
     <p>총 금액: {{ total_price }}</p>
-    <a href="{% url 'kiosk:payment' order_id %}">결제하기</a>
-    <a href="{% url 'kiosk:product_list' %}">더 담으러 가기</a>
+    <a href="{% url 'order:payment' order_id %}">결제하기</a>
+    <a href="{% url 'order:product_list' %}">더 담으러 가기</a>
 </body>
 </html>
