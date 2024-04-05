@@ -15,14 +15,11 @@ from django.utils import timezone
 
 class ProductView(ListView):
     model = Product
-    template_name = "kiosk/product_list.html"
+    template_name = "order/product_list.html"
     context_object_name = "product_list"
     paginate_by = 18
 
     def get_queryset(self):
-        """
-        URL의 category_id를 기반으로 Product 쿼리셋을 필터링합니다.
-        """
         category_id = self.kwargs.get("category_id")
         if category_id:
             return Product.objects.filter(category__id=category_id)
@@ -42,7 +39,7 @@ class ProductDetailView(View):
         product = get_object_or_404(Product, pk=product_id)
         price = get_list_or_404(Price, product=product)
         context = {"product": product, "price": price}
-        return render(request, "kiosk/product_detail.html", context=context)
+        return render(request, "order/product_detail.html", context=context)
 
     def post(self, request, *args, **kwargs):
         product_id = request.POST.get("product_id")
@@ -53,10 +50,8 @@ class ProductDetailView(View):
         if order_id:
             order = Order.objects.filter(id=order_id, payment_completed=False).first()
 
-        # 주문이 없거나 세션에 주문 ID가 없는 경우 새로운 주문 생성
         if not order_id or not order:
             order = Order.objects.create()
-            # 새로운 주문의 ID를 세션에 저장
             request.session["order_id"] = order.id
             order_id = order.id
 
@@ -66,11 +61,11 @@ class ProductDetailView(View):
             price=Price.objects.filter(product__id=product_id, size_id=size_id).get(),
             quantity=quantity,
         )
-        return redirect("kiosk:cart", order_id)
+        return redirect("cart:add_item", order_id)
 
 
 class CartView(TemplateView):
-    template_name = "kiosk/cart.html"
+    template_name = "order/cart.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -92,7 +87,7 @@ class RemoveFromCartView(View):
         order_id = kwargs.get("order_id")
         item = get_object_or_404(OrderItem, id=item_id)
         item.delete()
-        return redirect("kiosk:cart", order_id=order_id)
+        return redirect("cart:remove_item", order_id=order_id)
 
 
 class PaymentView(View):
@@ -103,7 +98,7 @@ class PaymentView(View):
         payment_amount = sum(item.price.price * item.quantity for item in order_items)
         payment_method = PaymentMethod.objects.all()
         context = {"payment_method": payment_method, "payment_amount": payment_amount}
-        return render(request, "kiosk/payment.html", context=context)
+        return render(request, "order/payment.html", context=context)
 
     def post(self, request, *args, **kwargs):
         order_id = kwargs.get("order_id")
@@ -120,4 +115,4 @@ class PaymentView(View):
         order.payment_completed = True
         order.save()
 
-        return redirect("kiosk:product_list")
+        return redirect("order:product_list")
