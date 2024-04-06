@@ -66,7 +66,7 @@ This software uses the following open source packages:
 
 - [Python](https://www.python.org/)
 - [Django](https://www.djangoproject.com/)
-- [Tailwind](https://tailwindcss.com/)
+- [Tailwind CSS](https://tailwindcss.com/)
 
 
 ## Related
