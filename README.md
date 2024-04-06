@@ -58,7 +58,7 @@ $ python manage.py runserver
 
 ## Download
 
-
+You can [download](https://github.com/madEffort/django-mini-starbucks/releases) the latest release version of the MiniBucks.
 
 
 ## Credits
