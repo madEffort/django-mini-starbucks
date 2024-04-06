@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <a href="https://github.com/madEffort/youtube-trend-dashboard.git"><img src="https://github.com/madEffort/django-mini-starbucks/assets/158125247/b368f464-666e-4baa-9bb6-dee07783781b" alt="MiniBucks" width="200"></a>
+  <a href="https://github.com/madEffort/django-mini-starbucks.git"><img src="https://github.com/madEffort/django-mini-starbucks/assets/158125247/b368f464-666e-4baa-9bb6-dee07783781b" alt="MiniBucks" width="200"></a>
   <br>
   MiniBucks
   <br>
