@@ -1,22 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>장바구니</title>
-</head>
-<body>
-    <h1>장바구니</h1>
-    {% for item in order_items %}
-        {{ item.product }} - {{ item.price.size }}, {{ item.quantity }}개 | {{ item.price.price }} 원
-        <!-- "제거" 버튼 추가 -->
-        <form action="{% url 'cart:remove_item' order_id item.id %}" method="post" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit">제거</button>
-        </form>
-        <br>
-    {% endfor %}
-    <p>총 금액: {{ total_price }}</p>
-    <a href="{% url 'order:payment' order_id %}">결제하기</a>
-    <a href="{% url 'order:product_list' %}">더 담으러 가기</a>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block content %}
+{% load filters %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex flex-col justify-center items-center min-h-screen">
+        <div class="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-xl w-full max-w-2xl">
+            <h1 class="text-center text-4xl font-bold text-gray-700 dark:text-gray-200 mb-6">장바구니</h1>
+            <hr class="my-4 border-gray-300 dark:border-gray-600">
+            <div class="bg-gray-100 dark:bg-gray-700 p-6 rounded-lg">
+                <h2 class="text-center text-3xl font-semibold text-gray-800 dark:text-gray-300">{{ product.product }}
+                </h2>
+                <div class="text-gray-600 dark:text-gray-400 text-sm max-w-md mx-auto">
+                    {% for item in order_items %}
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-base">{{ item.product }}({{ item.price.size }}) x {{ item.quantity }}</span>
+                        <span class="text-base">{{ item.quantity|multiply:item.price.price }} 원</span>
+                        <form action="{% url 'cart:remove_item' order_id item.id %}" method="post" class="inline">
+                            {% csrf_token %}
+                            <button
+                                class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition duration-300"
+                                type="submit">삭제</button>
+                        </form>
+                    </div>
+                    {% endfor %}
+                    <div class="text-right text-gray-600 dark:text-gray-400 text-lg"><span class="pr-20">총 금액</span>{{ total_price }}원</div>
+                </div>
+            </div>
+            <a href="{% url 'order:payment' order_id %}"
+                class="block w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg text-center transition duration-300 mt-8">
+                결제하기
+            </a>
+            <a href="{% url 'order:product_list' %}"
+                class="block text-center mt-4 text-blue-600 hover:text-blue-800 transition duration-300">더 담으러 가기</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

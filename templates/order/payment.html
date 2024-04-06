@@ -1,22 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>결제하기</title>
-</head>
-<body>
-    <h1>결제하기</h1>
-    <p>총 결제 금액: {{ payment_amount }}</p>
-    <form method="post">
-        {% csrf_token %}
-        <label for="payment_method">결제 방법:</label>
-        <input type="hidden" name="payment_amount" value="{{ payment_amount }}">
-        <select name="payment_method" id="payment_method">
-            {% for method in payment_method %}
-            <option value="{{ method.id }}">{{ method.method }}</option>
-            {% endfor %}
-        </select>
-        <button type="submit">결제</button>
-    </form>
-</body>
-</html>
+{% extends "base.html" %}
+{% block content %}
+{% load filters %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex flex-col justify-center items-center min-h-screen">
+        <div class="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-xl w-full max-w-2xl">
+            <h1 class="text-center text-4xl font-bold text-gray-700 dark:text-gray-200 mb-6">결제</h1>
+            <hr class="my-4 border-gray-300 dark:border-gray-600">
+            <div class="text-gray-600 dark:text-gray-400 text-sm max-w-md mx-auto">
+                {% for item in order_items %}
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-base">{{ item.product }}({{ item.price.size }}) x {{ item.quantity }}</span>
+                    <span class="text-base">{{ item.quantity|multiply:item.price.price }} 원</span>
+                </div>
+                {% endfor %}
+                <div class="text-right text-gray-600 dark:text-gray-400 text-lg"><span class="pr-20">총 금액</span>{{ payment_amount }}원</div>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="payment_amount" value="{{ payment_amount }}">
+                
+                <div class="mt-2">
+                    <p class="text-left text-gray-600 dark:text-gray-400 text-lg mb-2">결제 방식</p>
+                    <select name="payment_method" id="payment_method" class="w-full">
+                        {% for method in payment_method %}
+                        <option value="{{ method.id }}">{{ method.method }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="block w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg text-center transition duration-300 mt-8">결제</button>
+                <a href="{% url 'cart:add_item' order_id %}"
+                class="block text-center mt-4 text-blue-600 hover:text-blue-800 transition duration-300">장바구니로 가기</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

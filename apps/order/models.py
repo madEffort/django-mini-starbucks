@@ -33,6 +33,9 @@ class Price(models.Model):
     size = models.ForeignKey(ProductSize, on_delete=models.CASCADE)
     price = models.IntegerField()
 
+    class Meta:
+        unique_together = (('product', 'size'),)
+
     def __str__(self):
         return f"{self.product.product} - {self.size.size} - {self.price}"
 

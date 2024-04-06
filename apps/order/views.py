@@ -11,6 +11,8 @@ from .models import (
     Payment,
 )
 from django.utils import timezone
+from django.contrib import messages
+from django.shortcuts import redirect
 
 
 class ProductView(ListView):
@@ -97,7 +99,7 @@ class PaymentView(View):
         order_items = OrderItem.objects.filter(order_id=order_id)
         payment_amount = sum(item.price.price * item.quantity for item in order_items)
         payment_method = PaymentMethod.objects.all()
-        context = {"payment_method": payment_method, "payment_amount": payment_amount}
+        context = {"payment_method": payment_method, "payment_amount": payment_amount, "order_items": order_items, "order_id": order_id}
         return render(request, "order/payment.html", context=context)
 
     def post(self, request, *args, **kwargs):
@@ -115,4 +117,5 @@ class PaymentView(View):
         order.payment_completed = True
         order.save()
 
+        messages.success(request, '결제가 완료되었습니다.')
         return redirect("order:product_list")
