@@ -28,11 +28,12 @@ A simple <a href="https://www.starbucks.com/">Starbucks</a> app for quick produc
 
 
 ## Key Features
-* Categorize products by category
-* Add item to cart
-* Remove item from cart
-* Order products by size-based pricing
-* Select payment method
+
+- Sort products into their respective categories
+- Place an item in the shopping cart
+- Delete an item from the shopping cart
+- Arrange products according to pricing based on size
+- Choose a payment method
 
 ## How To Use
 
