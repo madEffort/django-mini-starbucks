@@ -22,14 +22,10 @@
             </div>
             <form method="post" class="mt-4">
                 {% csrf_token %}
-                <input type="hidden" id="product_id" name="product_id" value="{{ product.id }}">
+                {{form.product_id}}
                 <div class="flex items-center gap-4">
-                    <select id="size_id" name="size_id" class="px-3 py-2 border border-gray-300 rounded-lg w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                        {% for p in price %}
-                        <option value="{{ p.size.id }}">{{ p.size }}</option>
-                        {% endfor %}
-                    </select>
-                    <input type="number" class="px-3 py-2 border border-gray-300 rounded-lg w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white" id="quantity" name="quantity" min="1" value="1" />
+                    {{form.size_id}}
+                    {{form.quantity}}
                 </div>
                 <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold mt-3 py-3 px-4 rounded-lg transition duration-300">
                     장바구니에 담기

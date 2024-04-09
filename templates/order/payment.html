@@ -17,15 +17,11 @@
             </div>
             <form method="post">
                 {% csrf_token %}
-                <input type="hidden" name="payment_amount" value="{{ payment_amount }}">
+                {{ form.payment_amount }}
                 
                 <div class="mt-2">
                     <p class="text-left text-gray-600 dark:text-gray-400 text-lg mb-2">결제 방식</p>
-                    <select name="payment_method" id="payment_method" class="w-full">
-                        {% for method in payment_method %}
-                        <option value="{{ method.id }}">{{ method.method }}</option>
-                        {% endfor %}
-                    </select>
+                    {{ form.payment_method }}
                 </div>
                 <button type="submit" class="block w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg text-center transition duration-300 mt-8">결제</button>
                 <a href="{% url 'cart:add_item' order_id %}"

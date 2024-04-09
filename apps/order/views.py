@@ -1,6 +1,8 @@
+from typing import Any
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect, get_list_or_404
 
-from django.views.generic import ListView, View, TemplateView
+from django.views.generic import ListView, View, TemplateView, FormView
 from .models import (
     Product,
     ProductCategory,
@@ -13,6 +15,7 @@ from .models import (
 from django.utils import timezone
 from django.contrib import messages
 from django.shortcuts import redirect
+from apps.order.forms import ProductForm, PaymentForm
 
 
 class ProductView(ListView):
@@ -35,35 +38,50 @@ class ProductView(ListView):
         return context
 
 
-class ProductDetailView(View):
-    def get(self, request, *args, **kwargs):
-        product_id = kwargs.get("product_id")
-        product = get_object_or_404(Product, pk=product_id)
-        price = get_list_or_404(Price, product=product)
-        context = {"product": product, "price": price}
-        return render(request, "order/product_detail.html", context=context)
+class ProductDetailView(FormView):
 
-    def post(self, request, *args, **kwargs):
-        product_id = request.POST.get("product_id")
-        size_id = request.POST.get("size_id")
-        quantity = request.POST.get("quantity")
-        order_id = request.session.get("order_id")
+    form_class = ProductForm
+    template_name = "order/product_detail.html"
+
+    def get_form_kwargs(self):
+        kwargs = super(ProductDetailView, self).get_form_kwargs()
+        product_id = self.kwargs.get("product_id")
+        size_choices = [
+            (product.size.id, str(product.size.size))
+            for product in Price.objects.filter(product_id=product_id)
+        ]
+        kwargs["size_choices"] = size_choices
+        kwargs["initial"] = {"product_id": product_id}
+        return kwargs
+
+    def form_valid(self, form):
+        product_id = form.cleaned_data.get("product_id")
+        size_id = form.cleaned_data.get("size_id")
+        quantity = form.cleaned_data.get("quantity")
+        order_id = self.request.session.get("order_id")
 
         if order_id:
             order = Order.objects.filter(id=order_id, payment_completed=False).first()
 
         if not order_id or not order:
             order = Order.objects.create()
-            request.session["order_id"] = order.id
-            order_id = order.id
+            self.request.session["order_id"] = order.id
 
         OrderItem.objects.create(
             order=order,
-            product=Product.objects.filter(pk=product_id).get(),
+            product=Product.objects.get(pk=product_id),
             price=Price.objects.filter(product__id=product_id, size_id=size_id).get(),
             quantity=quantity,
         )
-        return redirect("cart:add_item", order_id)
+
+        return redirect("cart:add_item", order_id=order.id)
+
+    def get_context_data(self, **kwargs):
+        context = super(ProductDetailView, self).get_context_data(**kwargs)
+        product_id = self.kwargs.get("product_id")
+        product = get_object_or_404(Product, pk=product_id)
+        context["product"] = product
+        return context
 
 
 class CartView(TemplateView):
@@ -92,21 +110,29 @@ class RemoveFromCartView(View):
         return redirect("cart:remove_item", order_id=order_id)
 
 
-class PaymentView(View):
+class PaymentView(FormView):
 
-    def get(self, request, *args, **kwargs):
+    form_class = PaymentForm
+    template_name = "order/payment.html"
+
+    def get_form_kwargs(self):
+        kwargs = super(PaymentView, self).get_form_kwargs()
         order_id = kwargs.get("order_id")
         order_items = OrderItem.objects.filter(order_id=order_id)
         payment_amount = sum(item.price.price * item.quantity for item in order_items)
-        payment_method = PaymentMethod.objects.all()
-        context = {"payment_method": payment_method, "payment_amount": payment_amount, "order_items": order_items, "order_id": order_id}
-        return render(request, "order/payment.html", context=context)
+        method_choices = [
+            (method.id, str(method.method)) for method in PaymentMethod.objects.all()
+        ]
+        kwargs["method_choices"] = method_choices
+        kwargs["initial"] = {"payment_amount": payment_amount}
+        return kwargs
 
-    def post(self, request, *args, **kwargs):
-        order_id = kwargs.get("order_id")
-        payment_method_id = request.POST.get("payment_method")
-        payment_amount = int(request.POST.get("payment_amount"))
+    def form_valid(self, form):
+        order_id = self.kwargs.get("order_id")
+        payment_method_id = form.cleaned_data.get("payment_method")
+        payment_amount = form.cleaned_data.get("payment_amount")
         payment_method = PaymentMethod.objects.get(id=payment_method_id)
+
         order = Order.objects.get(id=order_id)
         Payment.objects.create(
             payment_time=timezone.now(),
@@ -117,5 +143,13 @@ class PaymentView(View):
         order.payment_completed = True
         order.save()
 
-        messages.success(request, '결제가 완료되었습니다.')
+        messages.success(self.request, "결제가 완료되었습니다.")
         return redirect("order:product_list")
+
+    def get_context_data(self, **kwargs):
+        context = super(PaymentView, self).get_context_data(**kwargs)
+        order_id = self.kwargs.get("order_id")
+        order_items = OrderItem.objects.filter(order_id=order_id)
+        context["order_items"] = order_items
+        context["order_id"] = order_id
+        return context
