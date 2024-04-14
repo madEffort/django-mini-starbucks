@@ -21,7 +21,7 @@ A simple <a href="https://www.starbucks.com/">Starbucks</a> app for quick produc
 </p>
 
 <p align="center">
-  <a href="#key-features">Key Features</a> • <a href="#how-to-use">How To Use</a> • <a href="#download">Download</a> • <a href="#credits">Credits</a> • <a href="#related">Related</a> • <a href="#license">License</a>
+  <a href="#key-features">Key Features</a> • <a href="#how-to-use">How To Use</a> • <a href="#download">Download</a> • <a href="#credits">Credits</a> • <a href="#related">Related</a> • <a href="#support">Support</a> • <a href="#license">License</a>
 </p>
 
 ![MiniBucks](https://github.com/madEffort/django-mini-starbucks/assets/158125247/018035cf-fa86-45ba-8394-a1e6d105eadf)
@@ -51,6 +51,8 @@ $ cd django-mini-starbucks
 # Install dependencies
 $ poetry install
 ```
+
+After setting up the database and templates, please use the `makemigrations`, `migrate` and `collectstatic` commands.
 
 ```bash
 # Run the app
