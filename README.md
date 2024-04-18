@@ -29,7 +29,7 @@ A simple <a href="https://www.starbucks.com/">Starbucks</a> app for quick produc
 - Arrange products according to pricing based on size
 - Choose a payment method
 
-[Database ERD](https://www.erdcloud.com/d/b3aZx9eP3AhAmxe9H)
+[Database ERD](https://www.erdcloud.com/p/b3aZx9eP3AhAmxe9H)
 
 ## How To Use
 
