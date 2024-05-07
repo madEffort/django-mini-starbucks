@@ -15,7 +15,7 @@ A simple <a href="https://www.starbucks.com/">Starbucks</a> app for quick produc
 </p>
 
 <p align="center">
-  <a href="#key-features">Key Features</a> • <a href="#how-to-use">How To Use</a> • <a href="#download">Download</a> • <a href="#credits">Credits</a> • <a href="#related">Related</a> • <a href="#support">Support</a> • <a href="#license">License</a>
+  <a href="#key-features">Key Features</a> • <a href="#database-erd">Database ERD</a> • <a href="#how-to-use">How To Use</a> • <a href="#download">Download</a> • <a href="#credits">Credits</a> • <a href="#related">Related</a> • <a href="#support">Support</a> • <a href="#license">License</a>
 </p>
 
 ![MiniBucks](https://github.com/madEffort/django-mini-starbucks/assets/158125247/018035cf-fa86-45ba-8394-a1e6d105eadf)
@@ -28,6 +28,8 @@ A simple <a href="https://www.starbucks.com/">Starbucks</a> app for quick produc
 - Delete an item from the shopping cart
 - Arrange products according to pricing based on size
 - Choose a payment method
+
+## Database ERD
 
 To view the **`Database ERD`**, please click [here](https://www.erdcloud.com/p/b3aZx9eP3AhAmxe9H).
 
